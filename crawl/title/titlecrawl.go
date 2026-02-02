@@ -1,8 +1,8 @@
 package title
 
 import (
-	"Spider_Crawl/pkg/url"
 	"fmt"
+	"github.com/Cao-yu-xin1/Spider_Crawl/pkg/url"
 	"time"
 )
 

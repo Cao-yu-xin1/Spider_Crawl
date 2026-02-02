@@ -1,8 +1,8 @@
-package main
+package click
 
 import (
-	"Spider_Crawl/pkg/url"
 	"fmt"
+	"github.com/Cao-yu-xin1/Spider_Crawl/pkg/url"
 	"github.com/go-rod/rod"
 	"time"
 )

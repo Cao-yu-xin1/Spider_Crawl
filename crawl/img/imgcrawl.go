@@ -1,8 +1,8 @@
-package img
+package main
 
 import (
-	"Spider_Crawl/pkg/url"
 	"fmt"
+	"github.com/Cao-yu-xin1/Spider_Crawl/pkg/url"
 	"time"
 )
 
@@ -60,7 +60,7 @@ func CrawlImg(pageUrl string, selector string) {
 	}
 }
 
-//func main() {
-//	CrawlImg("https://sale.1688.com/factory/u0vjcc4j.html?spm=a260k.home2025.centralDoor.ddoor.66333597BBbHgE&topOfferIds=1005591171200",
-//		".offerImg")
-//}
+func main() {
+	CrawlImg("https://sale.1688.com/factory/u0vjcc4j.html?spm=a260k.home2025.centralDoor.ddoor.66333597BBbHgE&topOfferIds=1005591171200",
+		".offerImg")
+}
