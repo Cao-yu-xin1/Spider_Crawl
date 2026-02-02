@@ -1,4 +1,4 @@
-package jwt
+package middleware
 
 import (
 	"fmt"
@@ -10,11 +10,12 @@ import (
 // @iat: 时间戳
 // @seconds: 过期时间，单位秒
 // @payload: 数据载体
+// @exp: 过期时间，单位秒
 
 const SecretKey = "1234567890"
 const Seconds = 86400 * 7
 
-func GetJwtToken(payload string) (string, error) {
+func GetJwtToken(exp int, payload string) (string, error) {
 	iat := time.Now().Unix()
 	//seconds := 86400 * 7
 	claims := make(jwt.MapClaims)

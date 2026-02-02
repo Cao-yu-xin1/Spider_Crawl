@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"Spider_Crawl/pkg/jwt"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -70,7 +69,7 @@ func Logger() gin.HandlerFunc {
 		logData.TokenExist = true
 
 		// 解析token
-		parseToken, err := jwt.ParseToken(token)
+		parseToken, err := ParseToken(token)
 		if err != nil {
 			// 埋点：解析token失败
 			logData.IsError = true

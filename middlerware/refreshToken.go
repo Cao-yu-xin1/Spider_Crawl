@@ -1,10 +1,9 @@
 package middleware
 
 import (
-	jwt2 "Spider_Crawl/pkg/jwt"
-	"errors"
 	"fmt"
-	"github.com/golang-jwt/jwt/v5"
+	"github.com/gin-gonic/gin"
+	"net/http"
 	"time"
 )
 
@@ -12,43 +11,40 @@ import (
 
 //RefreshToken 刷新JWT令牌
 
-func RefreshToken(tokenString string) (string, error) {
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
-		return []byte(jwt2.SecretKey), nil
-	})
-	if claims, ok := token.Claims.(jwt.MapClaims); ok {
-		//fmt.Println(claims["foo"], claims["nbf"])
-		//payload, err := ParseToken(tokenString)
-		// 提取原payload
-		// 计算令牌剩余过期时间
-		exp, ok := claims["exp"].(float64)
-		if !ok {
-			exp = float64(time.Now().Unix() + 86400*7) // 默认7天
-		}
-		remainingTime := time.Until(time.Unix(int64(exp), 0))
-		if remainingTime <= 0 {
-			return "", errors.New("token已过期")
-		}
-		/*// 从白名单中删除令牌
-		wKey := "whitelist" + tokenString
-		if err := config.Rdb.Del(config.Ctx, wKey).Err(); err != nil {
-			return "", errors.New("从白名单中删除令牌失败")
-		}*/
-		payload, ok := claims["payload"].(string)
-		if !ok {
-			return "", errors.New("invalid payload format")
-		}
+func RefreshToken() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		token := c.GetHeader("token")
+		if token != "" {
+			parseToken, err := ParseToken(token)
+			// 解析token有错误（如过期、签名错误）才走刷新逻辑
+			if err != nil {
+				c.JSON(http.StatusOK, gin.H{
+					"code": 400,
+					"msg":  "解析token失败",
+				})
+				c.Abort()
+				return // 解析失败直接终止，避免后续无效操作
+			}
 
-		// 生成新令牌
-		return jwt2.GetJwtToken(payload)
-		//return claims["payload"].(string), err
-	} else {
-		fmt.Println(err)
+			// 解析成功，才检查是否需要刷新
+			expVal, expOk := parseToken["exp"].(float64)
+			uidVal, uidOk := parseToken["userId"].(string)
+			// 确保exp和userId存在且类型正确
+			if expOk && uidOk {
+				// 检查token是否即将过期（1小时内过期则刷新）
+				if int64(expVal) < time.Now().Add(1*time.Hour).Unix() {
+					newToken, err := GetJwtToken(int(expVal), uidVal)
+					if err == nil && newToken != "" {
+						// 将新token放入响应头
+						c.Header("token", newToken)
+						fmt.Println("刷新后的token：", newToken)
+					}
+				}
+			}
+		}
+		// 继续执行后续中间件/接口逻辑
+		c.Next()
 	}
-	return "", errors.New("invalid token structure")
 }
 
 /*func ReFreShJwtToken() gin.HandlerFunc {

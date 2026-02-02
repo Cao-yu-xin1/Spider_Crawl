@@ -38,6 +38,30 @@ func NegotiationCacheMiddleware() gin.HandlerFunc {
 }
 
 /*
+marshal, err := json.Marshal(goods)
+	if err != nil {
+		begin.Rollback()
+		return nil, errors.New("商品序列化失败")
+	}
+	key := fmt.Sprintf("goods:%s", in.Name)
+	nx := config.Rdb.SetNX(config.Ctx, key, marshal, time.Minute*30).Val()
+	if !nx {
+		begin.Rollback()
+		return nil, errors.New("商品已存在,请勿重复上架")
+	}
+	begin.Commit()
+------------------------------
+key := fmt.Sprintf("goods:%s", in.Name)
+	err := config.Rdb.Exists(config.Ctx, key).Val()
+	if err == 0 {
+		return nil, errors.New("商品不存在")
+	} else {
+		result, _ := config.Rdb.Get(config.Ctx, key).Result()
+		json.Unmarshal([]byte(result), &goods)
+	}
+*/
+
+/*
 // NegotiationCacheMiddleware 协商缓存中间件
 func NegotiationCacheMiddleware() gin.HandlerFunc {
     return func(c *gin.Context) {

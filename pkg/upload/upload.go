@@ -6,11 +6,10 @@ import (
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 	"log"
-	"net/url"
 	"time"
 )
 
-func Minio(file string, name string) *url.URL {
+func Minio(file string, name string) string {
 	endpoint := "115.190.154.22:9000"
 	accessKeyID := "minioadmin"
 	secretAccessKey := "minioadmin"
@@ -53,7 +52,7 @@ func Minio(file string, name string) *url.URL {
 	}
 	fmt.Println(presignedURL)
 	fmt.Printf("Successfully uploaded %s to %s/%s\n", filePath, bucketName, objectName)
-	return presignedURL
+	return presignedURL.String()
 }
 
 /*
