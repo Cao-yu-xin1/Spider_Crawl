@@ -1,6 +1,6 @@
-module consul_demo/h5_bff
+module github.com/Cao-yu-xin1/Spider_Crawl
 
-go 1.21
+go 1.24.10
 
 replace consul_demo/pkg/consul => ../pkg/consul
 

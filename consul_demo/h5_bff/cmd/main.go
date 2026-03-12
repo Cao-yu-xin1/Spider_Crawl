@@ -17,6 +17,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// aaa
 func main() {
 	// 加载配置
 	cfg := config.DefaultConfig()

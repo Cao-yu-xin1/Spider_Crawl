@@ -15,6 +15,8 @@ import (
 	"consul_demo/pkg/service"
 )
 
+//11111
+
 var (
 	flagAll      bool
 	flagServices string
