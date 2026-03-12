@@ -1,0 +1,30 @@
+# Consul Demo 配置文件
+
+consul:
+  address: "115.190.154.22:8500"
+
+services:
+  h5_bff:
+    enabled: true
+    port: 8080
+    host: "127.0.0.1"
+    consul:
+      address: "115.190.154.22:8500"
+      service_name: "order-service"
+    order:
+      service_name: "order-service"
+
+  order_srv:
+    enabled: true
+    port: 50051
+    host: "127.0.0.1"
+    database:
+      host: "115.190.154.22"
+      port: 3306
+      user: "root"
+      password: "4ay1nkal3u8ed77y"
+      dbname: "zy0226"
+    consul:
+      address: "115.190.154.22:8500"
+      service_name: "order-service"
+      service_id: "order-service-1"
