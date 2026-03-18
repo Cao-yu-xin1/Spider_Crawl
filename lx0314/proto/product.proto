@@ -1,0 +1,133 @@
+syntax = "proto3";
+
+option go_package ="./";
+
+package pb;
+
+// ------------------------------------ 
+// Messages
+// ------------------------------------ 
+
+//--------------------------------products--------------------------------
+message Products {
+  int64 id = 1; //id
+  string name = 2; //鍟嗗搧鍚嶇О
+  string subtitle = 3; //鍓爣棰?  string desc = 7; //鍟嗗搧鎻忚堪
+  string desc = 4; //鍓爣棰?  string desc = 7; //鍟嗗搧鎻忚堪
+  string images = 5; //鍟嗗搧鍥剧墖(JSON鏁扮粍)
+  double price = 6; //褰撳墠浠锋牸
+  int64 stock = 7; //搴撳瓨鏁伴噺
+  int64 status = 8; //鐘舵€? 0-涓嬫灦, 1-涓婃灦, 2-鍒犻櫎
+}
+
+message AddProductsReq {
+  string name = 1; //鍟嗗搧鍚嶇О
+  string subtitle = 2; //鍓爣棰?  string desc = 3; //鍟嗗搧鎻忚堪
+  string desc = 3; //鍓爣棰?  string desc = 3; //鍟嗗搧鎻忚堪
+  string images = 4; //鍟嗗搧鍥剧墖(JSON鏁扮粍)
+  double price = 5; //褰撳墠浠锋牸
+  int64 stock = 6; //搴撳瓨鏁伴噺
+  int64 status = 7; //鐘舵€? 0-涓嬫灦, 1-涓婃灦, 2-鍒犻櫎
+}
+
+message AddProductsResp {
+  int64 id = 1; //id
+}
+
+message UpdateProductsReq {
+  int64 id = 1; //id
+  string name = 2; //鍟嗗搧鍚嶇О
+  string subtitle = 3; //鍓爣棰?  string desc = 4; //鍟嗗搧鎻忚堪
+  string desc = 4; //鍓爣棰?  string desc = 4; //鍟嗗搧鎻忚堪
+  string images = 5; //鍟嗗搧鍥剧墖(JSON鏁扮粍)
+  double price = 6; //褰撳墠浠锋牸
+  int64 stock = 7; //搴撳瓨鏁伴噺
+  int64 status = 8; //鐘舵€? 0-涓嬫灦, 1-涓婃灦, 2-鍒犻櫎
+}
+
+message UpdateProductsResp {
+  int64 id = 1; //id
+}
+
+message DelProductsReq {
+  int64 id = 1; //id
+}
+
+message DelProductsResp {
+  int64 id = 1; //id
+}
+
+message GetProductsByIdReq {
+  int64 id = 1; //id
+}
+
+message GetProductsByIdResp {
+  Products products = 1; //products
+}
+
+message SearchProductsReq {
+  int64 page = 1; //page
+  int64 size = 2; //size
+  int64 id = 3; //id
+  string name = 4; //鍟嗗搧鍚嶇О
+  int64 status = 5; //鐘舵€? 0-涓嬫灦, 1-涓婃灦, 2-鍒犻櫎
+}
+
+message SearchProductsResp {
+  repeated Products products = 1; //products
+}
+
+message CreateOrderReq {
+  int64 userId = 1; //用户ID
+  int64 payType = 2; //支付方式,0-支付宝,1-微信
+  int64 quantity = 3; //购买数量
+  repeated OrderItem orderItems = 4; //订单商品项
+}
+
+message OrderItem {
+  int64 orderId = 1; //商品ID
+  int64 productId = 2; //商品ID
+  int64 quantity = 3; //购买数量
+}
+
+message CreateOrderResp {
+  string orderNo = 1; //订单号
+  float total = 2; //订单总金额
+  string payType = 3; //支付方式,0-支付宝,1-微信
+}
+
+message NotifyPayReq {
+  string orderNo = 1; //订单号
+}
+
+message NotifyPayResp {
+//  int64 orderId = 1;
+}
+
+message RegisterReq {
+  string username = 1;
+  string password = 2;
+}
+
+message RegisterResp {
+  int64 id = 1;
+}
+
+
+
+// ------------------------------------ 
+// Rpc Func
+// ------------------------------------ 
+
+service Service{ 
+
+	 //-----------------------products----------------------- 
+	 rpc AddProducts(AddProductsReq) returns (AddProductsResp); 
+	 rpc UpdateProducts(UpdateProductsReq) returns (UpdateProductsResp); 
+	 rpc DelProducts(DelProductsReq) returns (DelProductsResp); 
+	 rpc GetProductsById(GetProductsByIdReq) returns (GetProductsByIdResp); 
+	 rpc SearchProducts(SearchProductsReq) returns (SearchProductsResp); 
+	 rpc NotifyPay(NotifyPayReq) returns (NotifyPayResp);
+	 rpc CreateOrder(CreateOrderReq) returns (CreateOrderResp);
+
+}

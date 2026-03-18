@@ -1,0 +1,143 @@
+# E-commerce System ER Diagram (Mermaid Text Format)
+
+## Database Schema
+
+```mermaid
+erDiagram
+    User {
+        bigint ID PK
+        string Username
+        string Email
+        string Password
+        string Phone
+        string Avatar
+        tinyint Status
+        tinyint Level
+    }
+    
+    Product {
+        bigint ID PK
+        string Name
+        string Subtitle
+        text Desc
+        text Images
+        decimal Price
+        int Stock
+        tinyint Status
+    }
+    
+    Order {
+        bigint ID PK
+        string OrderNo
+        bigint UserID FK
+        decimal Total
+        decimal PayAmount
+        tinyint Status
+        tinyint PayType
+        tinyint PayUrl
+    }
+    
+    OrderItems {
+        bigint ID PK
+        bigint OrderId FK
+        bigint ProductId FK
+        string ProductName
+        string ProductImage
+        decimal Price
+        int Quantity
+        decimal Total
+    }
+    
+    Inventory {
+        bigint ID PK
+        bigint ProductId FK
+        int TotalStock
+        int FrozenStock
+        int AvailableStock
+        bigint WarehouseId
+        string Location
+    }
+    
+    Logistics {
+        bigint ID PK
+        bigint OrderId FK
+        bigint UserId FK
+        string ExpressCompany
+        string ExpressNo
+        string ReceiverName
+        string ReceiverPhone
+        string Province
+        string City
+        string Area
+        string Address
+        tinyint Status
+    }
+    
+    PointsTransactions {
+        bigint ID PK
+        bigint UserId FK
+        bigint Points
+        tinyint Type
+        tinyint RelatedType
+        bigint RelatedId FK
+        bigint Balance
+        string Description
+    }
+```
+
+## Relationships
+
+```
+User (1) ←← (N) Order
+User (1) ←← (N) PointsTransactions
+User (1) ←← (N) Logistics
+
+Product (1) ←← (N) OrderItems
+Product (1) ←← (1) Inventory
+
+Order (1) ←← (N) OrderItems
+Order (1) ←← (1) Logistics
+Order (1) ←← (N) PointsTransactions
+
+Inventory (1) →→ (1) Product
+```
+
+## Foreign Keys
+
+| Table | Column | References |
+|-------|--------|------------|
+| Order | UserID | User.ID |
+| OrderItems | OrderId | Order.ID |
+| OrderItems | ProductId | Product.ID |
+| Inventory | ProductId | Product.ID |
+| Logistics | OrderId | Order.ID |
+| Logistics | UserId | User.ID |
+| PointsTransactions | UserId | User.ID |
+| PointsTransactions | RelatedId | Order.ID (when RelatedType=1) |
+
+## Stock Flow
+
+```
+初始库存: TotalStock = 100
+         AvailableStock = 100
+         FrozenStock = 0
+
+下单冻结: FrozenStock = 20
+         AvailableStock = 80
+
+订单完成: FrozenStock = 0
+         TotalStock = 80
+
+订单取消: FrozenStock = 0
+         TotalStock = 100
+```
+
+## Points Awarding
+
+```
+订单支付完成后:
+- Points = Total * 0.05 (5% 返点)
+- Balance = User.Points + Points
+- Type = 1 (获得)
+- RelatedType = 1 (订单)
+```
