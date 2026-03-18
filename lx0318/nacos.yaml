@@ -1,0 +1,8 @@
+Nacos:
+  Host: "115.190.154.22"
+  Port: 8848
+  NamespaceId: ""
+  DataId: "demo-config"
+  Group: "DEFAULT_GROUP"
+  Username: ""
+  Password: ""

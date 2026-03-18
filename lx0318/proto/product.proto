@@ -1,0 +1,123 @@
+syntax = "proto3";
+
+option go_package ="./";
+
+package pb;
+
+// ------------------------------------ 
+// Messages
+// ------------------------------------ 
+
+//--------------------------------products--------------------------------
+message RegisterReq {
+  string username = 1; //鍟嗗搧鍚嶇О
+  double password = 2; //浠锋牸
+}
+
+message RegisterResp {
+  int64  id = 1;
+}
+
+message Products {
+  int64 id = 1; //id
+  string name = 2; //鍟嗗搧鍚嶇О
+  double price = 3; //浠锋牸
+  int64 stock = 4; //搴撳瓨
+  int64 status = 5; //鐘舵€侊細0-涓嬫灦 1-涓婃灦
+}
+
+message AddProductsReq {
+  string name = 1; //鍟嗗搧鍚嶇О
+  double price = 2; //浠锋牸
+  int64 stock = 3; //搴撳瓨
+  int64 status = 4; //鐘舵€侊細0-涓嬫灦 1-涓婃灦
+}
+
+message AddProductsResp {
+  int64  id = 1;
+}
+
+message UpdateProductsReq {
+  int64 id = 1; //id
+  string name = 2; //鍟嗗搧鍚嶇О
+  double price = 3; //浠锋牸
+  int64 stock = 4; //搴撳瓨
+  int64 status = 5; //鐘舵€侊細0-涓嬫灦 1-涓婃灦
+}
+
+message UpdateProductsResp {
+  int64 id = 1; //id
+}
+
+message DelProductsReq {
+  int64 id = 1; //id
+}
+
+message DelProductsResp {
+  int64 id = 1; //id
+}
+
+message GetProductsByIdReq {
+  int64 id = 1; //id
+}
+
+message GetProductsByIdResp {
+  Products products = 1; //products
+}
+
+message SearchProductsReq {
+  int64 page = 1; //page
+  int64 size = 2; //limit
+  string name = 3; //鍟嗗搧鍚嶇О
+  int64 stock = 4; //搴撳瓨
+  int64 status = 5; //鐘舵€侊細0-涓嬫灦 1-涓婃灦
+}
+
+message SearchProductsResp {
+  repeated Products products = 1; //products
+}
+
+message CreateOrderReq {
+  int64 memberId = 1;
+  int64 addressId = 2;
+  repeated OrderItem item = 3;
+}
+
+message OrderItem {
+//  int64 orderId = 1;
+  int64 productId = 1;
+  int64 quantity = 2;
+}
+
+message CreateOrderResp {
+  string orderNo = 1;
+  float total = 2;
+  string payUrl = 3;
+}
+
+message NotifyPayReq {
+  string orderNo = 1;
+}
+
+message NotifyPayResp {
+}
+
+
+
+// ------------------------------------ 
+// Rpc Func
+// ------------------------------------ 
+
+service Service{ 
+
+	 //-----------------------products----------------------- 
+	 rpc Register(RegisterReq) returns (RegisterResp);
+	 rpc AddProducts(AddProductsReq) returns (AddProductsResp);
+	 rpc UpdateProducts(UpdateProductsReq) returns (UpdateProductsResp);
+	 rpc DelProducts(DelProductsReq) returns (DelProductsResp); 
+	 rpc GetProductsById(GetProductsByIdReq) returns (GetProductsByIdResp); 
+	 rpc SearchProducts(SearchProductsReq) returns (SearchProductsResp); 
+	 rpc CreateOrder(CreateOrderReq) returns (CreateOrderResp);
+	 rpc NotifyPay(NotifyPayReq) returns (NotifyPayResp);
+
+}
